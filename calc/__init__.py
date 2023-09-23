@@ -88,8 +88,11 @@ def adjusted_amortization_schedule(loan_value, interest, term, max_monthly_payme
         list: A list of dictionaries containing the adjusted amortization schedule, with each dictionary representing a monthly payment.
     """
     
-    schedule = amortization_calculator(loan_value, interest, term, down_payment, start_date, property_taxes, home_insurance, hoa_fees, pmi)
+    if start_date is None:
+        start_date = datetime.datetime.today()  # Set default start date to today if none is provided
     
+    schedule = amortization_calculator(loan_value, interest, term, down_payment, start_date, property_taxes, home_insurance, hoa_fees, pmi)
+        
     if max_monthly_payment is not None:
         total_monthly_payment = schedule[0]['Total Monthly Payment']
         if max_monthly_payment <= total_monthly_payment:
