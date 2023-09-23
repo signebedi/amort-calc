@@ -5,7 +5,7 @@ a python amortization calculator
 ### Examples
 
 ```python
-from calc import amortization_calculator, adjusted_amortization_schedule
+from calc import amortization_schedule, adjusted_amortization_schedule
 # Example 1 using amortization_calculator
 loan_value = 300000
 term = 30
@@ -16,7 +16,7 @@ insurance = 2000
 pmi = 0
 hoa = 0
 
-schedule_1 = amortization_calculator(
+schedule_1 = amortization_schedule(
     loan_value=loan_value,
     interest=interest,
     term=term,
