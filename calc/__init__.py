@@ -2,9 +2,29 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 class MaxPaymentException(Exception):
+    """
+    Exception raised for errors in the max monthly payment input.
+    """
     pass
     
 def amortization_calculator(loan_value, interest, term, down_payment=0, start_date=None, property_taxes=0, home_insurance=0, hoa_fees=0, pmi=0):
+    """Calculates the amortization schedule for a loan.
+
+    Args:
+        loan_value (float): The total loan amount.
+        interest (float): The annual interest rate (as a percentage).
+        term (int): The loan term in years.
+        down_payment (float, optional): The down payment amount. Defaults to 0.
+        start_date (datetime, optional): The start date of the loan. Defaults to today.
+        property_taxes (float, optional): The annual property tax amount. Defaults to 0.
+        home_insurance (float, optional): The annual home insurance amount. Defaults to 0.
+        hoa_fees (float, optional): The monthly HOA fees. Defaults to 0.
+        pmi (float, optional): The monthly PMI amount. Defaults to 0.
+
+    Returns:
+        list: A list of dictionaries containing the amortization schedule, with each dictionary representing a monthly payment.
+    """
+    
     if start_date is None:
         start_date = datetime.datetime.today()
     
@@ -47,6 +67,27 @@ def amortization_calculator(loan_value, interest, term, down_payment=0, start_da
     return amortization_schedule
 
 def adjusted_amortization_schedule(loan_value, interest, term, max_monthly_payment=None, down_payment=0, start_date=None, property_taxes=0, home_insurance=0, hoa_fees=0, pmi=0):
+    """Calculates an adjusted amortization schedule based on a max monthly payment.
+
+    Args:
+        loan_value (float): The total loan amount.
+        interest (float): The annual interest rate (as a percentage).
+        term (int): The loan term in years.
+        max_monthly_payment (float, optional): The maximum monthly payment amount. If provided, it must be greater than the total monthly payment (PITI). Defaults to None.
+        down_payment (float, optional): The down payment amount. Defaults to 0.
+        start_date (datetime, optional): The start date of the loan. Defaults to today.
+        property_taxes (float, optional): The annual property tax amount. Defaults to 0.
+        home_insurance (float, optional): The annual home insurance amount. Defaults to 0.
+        hoa_fees (float, optional): The monthly HOA fees. Defaults to 0.
+        pmi (float, optional): The monthly PMI amount. Defaults to 0.
+
+    Raises:
+        MaxPaymentException: If max_monthly_payment is provided but is not greater than the total monthly payment (PITI).
+
+    Returns:
+        list: A list of dictionaries containing the adjusted amortization schedule, with each dictionary representing a monthly payment.
+    """
+    
     schedule = amortization_calculator(loan_value, interest, term, down_payment, start_date, property_taxes, home_insurance, hoa_fees, pmi)
     
     if max_monthly_payment is not None:
