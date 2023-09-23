@@ -25,6 +25,15 @@ def amortization_schedule(loan_value, interest, term, down_payment=0, start_date
         list: A list of dictionaries containing the amortization schedule, with each dictionary representing a monthly payment.
     """
     
+    # Initialize cumulative sum variables
+    total_payments_sum = 0
+    interest_sum = 0
+    principal_sum = 0
+    property_taxes_sum = 0
+    home_insurance_sum = 0
+    hoa_fees_sum = 0
+    pmi_sum = 0
+
     if start_date is None:
         start_date = datetime.datetime.today()
     
@@ -58,6 +67,15 @@ def amortization_schedule(loan_value, interest, term, down_payment=0, start_date
         
         payment_date = start_date + relativedelta(months=month - 1)
         
+        # Update cumulative sum variables
+        total_payments_sum += total_monthly_payment
+        interest_sum += interest_payment
+        principal_sum += principal_payment
+        property_taxes_sum += monthly_property_taxes
+        home_insurance_sum += monthly_home_insurance
+        hoa_fees_sum += monthly_hoa_fees
+        pmi_sum += monthly_pmi
+
         amortization_schedule.append({
             'Month': payment_date.strftime('%Y-%m'),
             'Monthly Payment': round(monthly_payment, 2),
@@ -68,7 +86,14 @@ def amortization_schedule(loan_value, interest, term, down_payment=0, start_date
             'Property Taxes': round(monthly_property_taxes, 2),
             'Home Insurance': round(monthly_home_insurance, 2),
             'HOA Fees': round(monthly_hoa_fees, 2),
-            'PMI': round(monthly_pmi, 2)
+            'PMI': round(monthly_pmi, 2),
+            'Total Payments Sum': round(total_payments_sum, 2),
+            'Interest Sum': round(interest_sum, 2),
+            'Principal Sum': round(principal_sum, 2),
+            'Property Taxes Sum': round(property_taxes_sum, 2),
+            'Home Insurance Sum': round(home_insurance_sum, 2),
+            'HOA Fees Sum': round(hoa_fees_sum, 2),
+            'PMI Sum': round(pmi_sum, 2)
         })
     
     return amortization_schedule
@@ -96,6 +121,21 @@ def adjusted_amortization_schedule(loan_value, interest, term, max_monthly_payme
         list: A list of dictionaries containing the adjusted amortization schedule, with each dictionary representing a monthly payment.
     """
     
+    # Monthly breakdown of additional costs
+    monthly_property_taxes = property_taxes / 12
+    monthly_home_insurance = home_insurance / 12
+    monthly_hoa_fees = hoa_fees  # Assuming hoa_fees is already a monthly amount
+    monthly_pmi = pmi  # Assuming pmi is already a monthly amount
+
+    # Initialize cumulative sum variables
+    total_payments_sum = 0
+    interest_sum = 0
+    principal_sum = 0
+    property_taxes_sum = 0
+    home_insurance_sum = 0
+    hoa_fees_sum = 0
+    pmi_sum = 0
+
     if start_date is None:
         start_date = datetime.datetime.today()
     
@@ -125,18 +165,51 @@ def adjusted_amortization_schedule(loan_value, interest, term, max_monthly_payme
                     'Principal': round(principal_payment, 2),
                     'Interest': round(interest_payment, 2),
                     'Remaining Balance': round(loan_amount, 2),
-                    'Total Monthly Payment': round(principal_payment + interest_payment + additional_costs, 2)
+                    'Total Monthly Payment': round(principal_payment + interest_payment + additional_costs, 2),
+                    'Property Taxes': round(monthly_property_taxes, 2),
+                    'Home Insurance': round(monthly_home_insurance, 2),
+                    'HOA Fees': round(monthly_hoa_fees, 2),
+                    'PMI': round(monthly_pmi, 2),
+                    'Total Payments Sum': round(total_payments_sum, 2),
+                    'Interest Sum': round(interest_sum, 2),
+                    'Principal Sum': round(principal_sum, 2),
+                    'Property Taxes Sum': round(property_taxes_sum, 2),
+                    'Home Insurance Sum': round(home_insurance_sum, 2),
+                    'HOA Fees Sum': round(hoa_fees_sum, 2),
+                    'PMI Sum': round(pmi_sum, 2)
+
                 })
                 break  # Exit the loop as the loan is paid off
             
             payment_date = start_date + relativedelta(months=month - 1)
+
+            # Update cumulative sum variables
+            total_payments_sum += max_monthly_payment
+            interest_sum += interest_payment
+            principal_sum += principal_payment
+            property_taxes_sum += monthly_property_taxes
+            home_insurance_sum += monthly_home_insurance
+            hoa_fees_sum += monthly_hoa_fees
+            pmi_sum += monthly_pmi
+
             new_schedule.append({
                 'Month': payment_date.strftime('%Y-%m'),
                 'Monthly Payment': round(principal_payment + interest_payment, 2),  # Excluding additional costs
                 'Principal': round(principal_payment, 2),
                 'Interest': round(interest_payment, 2),
                 'Remaining Balance': round(loan_amount, 2),
-                'Total Monthly Payment': round(max_monthly_payment, 2)
+                'Total Monthly Payment': round(max_monthly_payment, 2),
+                'Property Taxes': round(monthly_property_taxes, 2),
+                'Home Insurance': round(monthly_home_insurance, 2),
+                'HOA Fees': round(monthly_hoa_fees, 2),
+                'PMI': round(monthly_pmi, 2),
+                'Total Payments Sum': round(total_payments_sum, 2),
+                'Interest Sum': round(interest_sum, 2),
+                'Principal Sum': round(principal_sum, 2),
+                'Property Taxes Sum': round(property_taxes_sum, 2),
+                'Home Insurance Sum': round(home_insurance_sum, 2),
+                'HOA Fees Sum': round(hoa_fees_sum, 2),
+                'PMI Sum': round(pmi_sum, 2)
             })
         
         return new_schedule
